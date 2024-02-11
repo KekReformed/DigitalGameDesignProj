@@ -18,7 +18,8 @@ public class Vision : MonoBehaviour
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
     }
-
+    
+    //Much of this code was created with the help of the following youtube tutorial: https://www.youtube.com/watch?v=CSeUMTaNFYk
     private void LateUpdate()
     {
         float angle = startingAngle;
@@ -37,18 +38,15 @@ public class Vision : MonoBehaviour
             Vector3 vertex;
             RaycastHit2D raycasthit2D = Physics2D.Raycast(origin, AngleToVector3(angle), viewDistance, ~playerLayer);
 
-
             if (raycasthit2D.collider == null)
             {
                 // didn't hit anything
                 vertex = origin + AngleToVector3(angle) * viewDistance;
-                Debug.Log("No hit");
             }
             else
             {
                 // ruh roh we hit something
                 vertex = raycasthit2D.point;
-                Debug.Log("Hit");
             }
             vertices[vertexIndex] = vertex;
 

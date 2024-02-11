@@ -15,6 +15,8 @@ public class PlayerMovement : MonoBehaviour
 	[SerializeField] private LayerMask platformLayer;
 	[SerializeField] private Vision vision;
 
+	public Vector3 visionOriginAdjustment;
+
 	private bool isJumping;
 	private bool wallJumping;
 	private string direction;
@@ -33,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
 
 	private void Update()
 	{
-		vision.SetOrigin(transform.position);
+		vision.SetOrigin(new Vector3(transform.position.x + visionOriginAdjustment.x, transform.position.y + visionOriginAdjustment.y, 0));
 		vision.SetAim(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
 		//Grounded Check
@@ -105,7 +107,7 @@ public class PlayerMovement : MonoBehaviour
 		}
 	}
 
-    private void FixedUpdate()
+	private void FixedUpdate()
 	{
 
 		if (wallJumping)
