@@ -3,7 +3,7 @@ guid: a8a3de857e2ce8d4c826eac1aec2789d
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
-  serializedVersion: 12
+  serializedVersion: 11
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -20,12 +20,11 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
-    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMipmapLimit: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -64,8 +63,6 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
-  swizzle: 50462976
-  cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -77,7 +74,6 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -90,7 +86,6 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -103,7 +98,6 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -435,23 +429,24 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Dirt_Tileset_0: 117426991
-      Dirt_Tileset_1: 1609958937
-      Dirt_Tileset_10: 2041511946
-      Dirt_Tileset_11: 1793206231
-      Dirt_Tileset_12: 50233402
-      Dirt_Tileset_13: -625350780
-      Dirt_Tileset_14: 2012737179
-      Dirt_Tileset_2: 876352185
-      Dirt_Tileset_3: -648583412
-      Dirt_Tileset_4: -982404989
-      Dirt_Tileset_5: -1045072768
-      Dirt_Tileset_6: 332688749
-      Dirt_Tileset_7: 1712844124
-      Dirt_Tileset_8: -248905407
       Dirt_Tileset_9: 1031348559
-  mipmapLimitGroupName: 
+      Dirt_Tileset_0: 117426991
+      Dirt_Tileset_6: 332688749
+      Dirt_Tileset_3: -648583412
+      Dirt_Tileset_12: 50233402
+      Dirt_Tileset_8: -248905407
+      Dirt_Tileset_7: 1712844124
+      Dirt_Tileset_1: 1609958937
+      Dirt_Tileset_2: 876352185
+      Dirt_Tileset_10: 2041511946
+      Dirt_Tileset_5: -1045072768
+      Dirt_Tileset_11: 1793206231
+      Dirt_Tileset_14: 2012737179
+      Dirt_Tileset_13: -625350780
+      Dirt_Tileset_4: -982404989
+  spritePackingTag: 
   pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
