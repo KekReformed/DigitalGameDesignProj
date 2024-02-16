@@ -8,7 +8,7 @@ public class Vision : MonoBehaviour
     [SerializeField] private float fov;
     [SerializeField] private int rayCount;
     [SerializeField] private float viewDistance;
-    [SerializeField] private LayerMask playerLayer;
+    [SerializeField] private LayerMask blockingLayers;
     [SerializeField] private float startingAngle;
     private Mesh mesh;
     [SerializeField] private Vector3 origin = Vector3.zero;
@@ -18,7 +18,7 @@ public class Vision : MonoBehaviour
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
     }
-    
+
     //Much of this code was created with the help of the following youtube tutorial: https://www.youtube.com/watch?v=CSeUMTaNFYk
     private void LateUpdate()
     {
@@ -36,7 +36,7 @@ public class Vision : MonoBehaviour
         for (int i = 0; i <= rayCount; i++)
         {
             Vector3 vertex;
-            RaycastHit2D raycasthit2D = Physics2D.Raycast(origin, AngleToVector3(angle), viewDistance, ~playerLayer);
+            RaycastHit2D raycasthit2D = Physics2D.Raycast(origin, AngleToVector3(angle), viewDistance, blockingLayers);
 
             if (raycasthit2D.collider == null)
             {
@@ -66,6 +66,8 @@ public class Vision : MonoBehaviour
         mesh.vertices = vertices;
         mesh.uv = uv;
         mesh.triangles = triangles;
+
+        mesh.RecalculateBounds();
     }
 
 
@@ -85,16 +87,16 @@ public class Vision : MonoBehaviour
         return angle;
     }
 
-    public void SetOrigin(Vector3 origin)
+    public void SetOrigin(Vector3 origin, Vector2 offset)
     {
-        this.origin = origin;
+        this.origin = new Vector3(origin.x + offset.x, origin.y + offset.y);
     }
 
     public void SetAim(Vector3 aimDirection)
     {
         float AngleRad = Mathf.Atan2(aimDirection.y - origin.y, aimDirection.x - origin.x);
 
-        float AngleDeg = (180 / Mathf.PI) *AngleRad;
+        float AngleDeg = (180 / Mathf.PI) * AngleRad;
 
         startingAngle = AngleDeg + fov / 2f;
     }

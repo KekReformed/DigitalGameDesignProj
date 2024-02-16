@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a8a3de857e2ce8d4c826eac1aec2789d
+guid: 8b864cfb4ed358544a8e920e27b521de
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -104,7 +104,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Dirt_Tileset_0
+      name: Dirt_Tileset 1_0
       rect:
         serializedVersion: 2
         x: 0
@@ -118,14 +118,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e0fafde27dc98bb4a8716f97414368b0
-      internalID: 117426991
+      spriteID: 73984910701f4f64f90f47d418bb8f92
+      internalID: -9101210
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dirt_Tileset_1
+      name: Dirt_Tileset 1_1
       rect:
         serializedVersion: 2
         x: 32
@@ -139,14 +139,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f3a69dd375a153d47ac23a6ce0799434
-      internalID: 1609958937
+      spriteID: 736e19e31f2324641becc7bfa3747540
+      internalID: 1913791069
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dirt_Tileset_2
+      name: Dirt_Tileset 1_2
       rect:
         serializedVersion: 2
         x: 64
@@ -160,14 +160,56 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1bc61b4d19a83834eb6949803e3ae723
-      internalID: 876352185
+      spriteID: 50dff7d37fb8c0d4996897806803da59
+      internalID: -1640857347
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dirt_Tileset_3
+      name: Dirt_Tileset 1_3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5826cd3d2c15e0546ba4e91209404012
+      internalID: -1520011699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_Tileset 1_4
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2f83d0e5120871439233f034bb8a9e6
+      internalID: -1297250480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_Tileset 1_5
       rect:
         serializedVersion: 2
         x: 0
@@ -181,14 +223,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2f6963fb532ddea4d84d8e8fa65394b7
-      internalID: -648583412
+      spriteID: 2b277eefa3c99644d97970c141d1ec74
+      internalID: 1572772765
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dirt_Tileset_4
+      name: Dirt_Tileset 1_6
       rect:
         serializedVersion: 2
         x: 32
@@ -202,14 +244,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 36f7d67ea3b27994ab0b0c2344cf4e32
-      internalID: -982404989
+      spriteID: a9196900e71409648b884244ce65ee88
+      internalID: 1954344152
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dirt_Tileset_5
+      name: Dirt_Tileset 1_7
       rect:
         serializedVersion: 2
         x: 64
@@ -223,14 +265,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 584af085c6da89f43a55802f2e9ad9d2
-      internalID: -1045072768
+      spriteID: ce829a21824ed284fa0a06d484542b35
+      internalID: 1069261735
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dirt_Tileset_6
+      name: Dirt_Tileset 1_8
       rect:
         serializedVersion: 2
         x: 96
@@ -244,14 +286,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 41e75416515efe64bb739fad3c0256b0
-      internalID: 332688749
+      spriteID: 46b31ec9c2fb5b647af3c9b4ff6bd0fa
+      internalID: 638622220
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dirt_Tileset_7
+      name: Dirt_Tileset 1_9
       rect:
         serializedVersion: 2
         x: 128
@@ -265,14 +307,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aec95c9408476b04ca7cf4d620ece338
-      internalID: 1712844124
+      spriteID: 4f0287436648a5b418296484ba75041d
+      internalID: 1656035572
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dirt_Tileset_8
+      name: Dirt_Tileset 1_10
       rect:
         serializedVersion: 2
         x: 160
@@ -286,14 +328,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1a842385e3229b241b8adef8fc7abef9
-      internalID: -248905407
+      spriteID: d854d4e75010d2540a9281c8ce20746b
+      internalID: -696951168
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dirt_Tileset_9
+      name: Dirt_Tileset 1_11
       rect:
         serializedVersion: 2
         x: 0
@@ -307,14 +349,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3c29f503104bfe640bbe190f943ddb72
-      internalID: 1031348559
+      spriteID: 048430de08a95224ea62254db9cd7f6a
+      internalID: 1622119949
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dirt_Tileset_10
+      name: Dirt_Tileset 1_12
       rect:
         serializedVersion: 2
         x: 32
@@ -328,14 +370,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0dd14843b167740499c09d4241efa537
-      internalID: 2041511946
+      spriteID: 79512c585c5ba55489751551c27324b5
+      internalID: -1797260518
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dirt_Tileset_11
+      name: Dirt_Tileset 1_13
       rect:
         serializedVersion: 2
         x: 64
@@ -349,14 +391,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4992ff31ff452e245b149ac7557cdb9a
-      internalID: 1793206231
+      spriteID: 50b88d275673cc947adda893b7b2a497
+      internalID: 103636396
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dirt_Tileset_12
+      name: Dirt_Tileset 1_14
       rect:
         serializedVersion: 2
         x: 96
@@ -370,14 +412,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 424044d41a6611f44bb2a4ccbb2ac4ba
-      internalID: 50233402
+      spriteID: 93555148219c1fe4cb607beaaa2862a9
+      internalID: 191846881
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dirt_Tileset_13
+      name: Dirt_Tileset 1_15
       rect:
         serializedVersion: 2
         x: 128
@@ -391,14 +433,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d6571e2390847544b8534b93b0d02a54
-      internalID: -625350780
+      spriteID: 7e68d8d5045343e4ca1ed76fc1633fd4
+      internalID: -692352661
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dirt_Tileset_14
+      name: Dirt_Tileset 1_16
       rect:
         serializedVersion: 2
         x: 160
@@ -412,8 +454,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c834960ebd7604245a247661db78ce11
-      internalID: 2012737179
+      spriteID: 63f07cb1de4ea904f85ee8f1fd531706
+      internalID: 1479248903
       vertices: []
       indices: 
       edges: []
@@ -429,21 +471,23 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Dirt_Tileset_9: 1031348559
-      Dirt_Tileset_0: 117426991
-      Dirt_Tileset_6: 332688749
-      Dirt_Tileset_3: -648583412
-      Dirt_Tileset_12: 50233402
-      Dirt_Tileset_8: -248905407
-      Dirt_Tileset_7: 1712844124
-      Dirt_Tileset_1: 1609958937
-      Dirt_Tileset_2: 876352185
-      Dirt_Tileset_10: 2041511946
-      Dirt_Tileset_5: -1045072768
-      Dirt_Tileset_11: 1793206231
-      Dirt_Tileset_14: 2012737179
-      Dirt_Tileset_13: -625350780
-      Dirt_Tileset_4: -982404989
+      Dirt_Tileset 1_6: 1954344152
+      Dirt_Tileset 1_3: -1520011699
+      Dirt_Tileset 1_11: 1622119949
+      Dirt_Tileset 1_12: -1797260518
+      Dirt_Tileset 1_9: 1656035572
+      Dirt_Tileset 1_8: 638622220
+      Dirt_Tileset 1_4: -1297250480
+      Dirt_Tileset 1_1: 1913791069
+      Dirt_Tileset 1_5: 1572772765
+      Dirt_Tileset 1_15: -692352661
+      Dirt_Tileset 1_0: -9101210
+      Dirt_Tileset 1_10: -696951168
+      Dirt_Tileset 1_14: 191846881
+      Dirt_Tileset 1_7: 1069261735
+      Dirt_Tileset 1_13: 103636396
+      Dirt_Tileset 1_2: -1640857347
+      Dirt_Tileset 1_16: 1479248903
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
