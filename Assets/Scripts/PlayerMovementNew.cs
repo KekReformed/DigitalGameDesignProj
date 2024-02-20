@@ -55,13 +55,15 @@ public class PlayerMovementNew : MonoBehaviour
         {
             body.velocity = new Vector2(body.velocity.x + acceleration * Time.deltaTime  * moveSpeedMod, body.velocity.y);
             if (ledgeDir == -1) LeaveLedge();
-            visionDirectionAdjustment.x = body.velocity.x;
+            visionDirectionAdjustment.x = 0.1f;
+            renderer.flipX = false;
         }
         else if (Input.GetAxisRaw("Horizontal") < 0 && body.velocity.x >= -speedCap  * moveSpeedMod)
         {
             body.velocity = new Vector2(body.velocity.x - acceleration * Time.deltaTime  * moveSpeedMod, body.velocity.y);
             if (ledgeDir == 1) LeaveLedge();
-            visionDirectionAdjustment.x = body.velocity.x;
+            visionDirectionAdjustment.x = -0.1f;
+            renderer.flipX = true;
         }
         else
         {
@@ -105,11 +107,6 @@ public class PlayerMovementNew : MonoBehaviour
             transform.localScale = new Vector3(1, 1, 1);
             visionDirectionAdjustment.y = 0;
         }
-
-
-        //Player Rotation to face direction
-        if (body.velocity.x < 0) renderer.flipX = true;
-        else if (body.velocity.x > 0) renderer.flipX = false;
 
         if (Input.GetButtonDown("Jump") && (OnGround() || OnLedge))
         {
