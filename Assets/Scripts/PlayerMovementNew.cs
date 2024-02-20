@@ -23,9 +23,11 @@ public class PlayerMovementNew : MonoBehaviour
     private bool canGrabLedge;
     private int ledgeDir;
     private float ledgeGrabbedForSeconds;
+    private float moveSpeedMod = 1;
     private Rigidbody2D body;
     private BoxCollider2D boxCollider;
     private SpriteRenderer renderer;
+    private Vector2 visionDirectionAdjustment;
 
     void Start()
     {
@@ -38,7 +40,7 @@ public class PlayerMovementNew : MonoBehaviour
     {
         //Vision Cone Movement
         vision.SetOrigin(transform.position, visionOriginAdjustment);
-        vision.SetAim(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        vision.SetAim(new Vector2(transform.position.x + visionDirectionAdjustment.x, transform.position.y +  visionOriginAdjustment.y + visionDirectionAdjustment.y));
 
         if (ledgeGrabbedForSeconds < ledgeGrabCooldown) {
             ledgeGrabbedForSeconds += Time.deltaTime;
@@ -46,15 +48,20 @@ public class PlayerMovementNew : MonoBehaviour
         }
         else canGrabLedge = true;
 
-        if (Input.GetAxisRaw("Horizontal") > 0 && body.velocity.x <= speedCap)
+        if(Input.GetButton("Sprint")) moveSpeedMod = 2;
+        else moveSpeedMod = 1;
+
+        if (Input.GetAxisRaw("Horizontal") > 0 && body.velocity.x <= speedCap  * moveSpeedMod)
         {
-            body.velocity = new Vector2(body.velocity.x + acceleration * Time.deltaTime, body.velocity.y);
+            body.velocity = new Vector2(body.velocity.x + acceleration * Time.deltaTime  * moveSpeedMod, body.velocity.y);
             if (ledgeDir == -1) LeaveLedge();
+            visionDirectionAdjustment.x = body.velocity.x;
         }
-        else if (Input.GetAxisRaw("Horizontal") < 0 && body.velocity.x >= -speedCap)
+        else if (Input.GetAxisRaw("Horizontal") < 0 && body.velocity.x >= -speedCap  * moveSpeedMod)
         {
-            body.velocity = new Vector2(body.velocity.x - acceleration * Time.deltaTime, body.velocity.y);
+            body.velocity = new Vector2(body.velocity.x - acceleration * Time.deltaTime  * moveSpeedMod, body.velocity.y);
             if (ledgeDir == 1) LeaveLedge();
+            visionDirectionAdjustment.x = body.velocity.x;
         }
         else
         {
@@ -89,10 +96,14 @@ public class PlayerMovementNew : MonoBehaviour
             }
             LeaveLedge();
         }
+        else if(Input.GetAxisRaw("Vertical") > 0) {
+            visionDirectionAdjustment.y = 6f;
+        }
         else
         {
             if (transform.localScale.y < 1f) transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
             transform.localScale = new Vector3(1, 1, 1);
+            visionDirectionAdjustment.y = 0;
         }
 
 
@@ -100,10 +111,11 @@ public class PlayerMovementNew : MonoBehaviour
         if (body.velocity.x < 0) renderer.flipX = true;
         else if (body.velocity.x > 0) renderer.flipX = false;
 
-        if (Input.GetButtonDown("Jump") && OnGround())
+        if (Input.GetButtonDown("Jump") && (OnGround() || OnLedge))
         {
             isJumping = true;
             body.velocity = new Vector2(body.velocity.x, jumpVelocity);
+            LeaveLedge();
         }
 
 
@@ -167,6 +179,7 @@ public class PlayerMovementNew : MonoBehaviour
         return output;
     }
 
+    //USE THIS INSTEAD OF OnLedge = false OR IT WILL DO THE BUG
     private void LeaveLedge(){
         if (ledgeGrabbedForSeconds > ledgeGrabCooldown) ledgeGrabbedForSeconds = 0;
         OnLedge = false;

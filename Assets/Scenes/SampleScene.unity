@@ -299,7 +299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bda2e4a81c258442b490e819fbcb183, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fov: 75
+  fov: 50
   rayCount: 50
   viewDistance: 5
   blockingLayers:
@@ -851,9 +851,9 @@ MonoBehaviour:
     m_Bits: 64
   vision: {fileID: 401333553}
   visionOriginAdjustment: {x: 0, y: 0.25}
-  ledgeGrabDistance: 0.5
-  ledgeGrabOffset: 0.1
-  ledgeGrabCooldown: 1
+  ledgeGrabDistance: 0.25
+  ledgeGrabOffset: 0.2
+  ledgeGrabCooldown: 0.5
   ledgeGrabTolerance: 0.1
 --- !u!1 &963106027
 GameObject:
