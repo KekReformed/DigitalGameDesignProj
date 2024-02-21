@@ -26,8 +26,7 @@ public class PlayerMovementNew : MonoBehaviour
     private float moveSpeedMod = 1;
     private Rigidbody2D body;
     private BoxCollider2D boxCollider;
-    private SpriteRenderer renderer;
-    private Vector2 visionDirectionAdjustment;
+    private SpriteRenderer renderer; //Ignore this error unity is really dumb sometimes
 
     void Start()
     {
@@ -40,29 +39,28 @@ public class PlayerMovementNew : MonoBehaviour
     {
         //Vision Cone Movement
         vision.SetOrigin(transform.position, visionOriginAdjustment);
-        vision.SetAim(new Vector2(transform.position.x + visionDirectionAdjustment.x, transform.position.y +  visionOriginAdjustment.y + visionDirectionAdjustment.y));
+        vision.SetAim(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
-        if (ledgeGrabbedForSeconds < ledgeGrabCooldown) {
+        if (ledgeGrabbedForSeconds < ledgeGrabCooldown)
+        {
             ledgeGrabbedForSeconds += Time.deltaTime;
             canGrabLedge = false;
         }
         else canGrabLedge = true;
 
-        if(Input.GetButton("Sprint")) moveSpeedMod = 2;
+        if (Input.GetButton("Sprint")) moveSpeedMod = 2;
         else moveSpeedMod = 1;
 
-        if (Input.GetAxisRaw("Horizontal") > 0 && body.velocity.x <= speedCap  * moveSpeedMod)
+        if (Input.GetAxisRaw("Horizontal") > 0 && body.velocity.x <= speedCap * moveSpeedMod)
         {
-            body.velocity = new Vector2(body.velocity.x + acceleration * Time.deltaTime  * moveSpeedMod, body.velocity.y);
+            body.velocity = new Vector2(body.velocity.x + acceleration * Time.deltaTime * moveSpeedMod, body.velocity.y);
             if (ledgeDir == -1) LeaveLedge();
-            visionDirectionAdjustment.x = 0.1f;
             renderer.flipX = false;
         }
-        else if (Input.GetAxisRaw("Horizontal") < 0 && body.velocity.x >= -speedCap  * moveSpeedMod)
+        else if (Input.GetAxisRaw("Horizontal") < 0 && body.velocity.x >= -speedCap * moveSpeedMod)
         {
-            body.velocity = new Vector2(body.velocity.x - acceleration * Time.deltaTime  * moveSpeedMod, body.velocity.y);
+            body.velocity = new Vector2(body.velocity.x - acceleration * Time.deltaTime * moveSpeedMod, body.velocity.y);
             if (ledgeDir == 1) LeaveLedge();
-            visionDirectionAdjustment.x = -0.1f;
             renderer.flipX = true;
         }
         else
@@ -75,7 +73,7 @@ public class PlayerMovementNew : MonoBehaviour
                 {
                     body.velocity = new Vector2(0, body.velocity.y);
                 }
-   
+
             }
 
             //Right decceleration
@@ -98,14 +96,10 @@ public class PlayerMovementNew : MonoBehaviour
             }
             LeaveLedge();
         }
-        else if(Input.GetAxisRaw("Vertical") > 0) {
-            visionDirectionAdjustment.y = 6f;
-        }
-        else
+        else if (CanUncrouch())
         {
             if (transform.localScale.y < 1f) transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
             transform.localScale = new Vector3(1, 1, 1);
-            visionDirectionAdjustment.y = 0;
         }
 
         if (Input.GetButtonDown("Jump") && (OnGround() || OnLedge))
@@ -143,6 +137,8 @@ public class PlayerMovementNew : MonoBehaviour
             OnLedge = true;
         }
 
+        Debug.Log($"{Ledges[1]}, {body.velocity.y < 0}, {!renderer.flipX}, {canGrabLedge}");
+
         if (OnLedge)
         {
             body.velocity = new Vector2(body.velocity.x, 0f);
@@ -177,7 +173,9 @@ public class PlayerMovementNew : MonoBehaviour
     }
 
     //USE THIS INSTEAD OF OnLedge = false OR IT WILL DO THE BUG
-    private void LeaveLedge(){
+    private void LeaveLedge()
+    {
+        if (!OnLedge) return;
         if (ledgeGrabbedForSeconds > ledgeGrabCooldown) ledgeGrabbedForSeconds = 0;
         OnLedge = false;
     }
@@ -187,5 +185,12 @@ public class PlayerMovementNew : MonoBehaviour
         Vector2 colliderSize = boxCollider.bounds.size;
         RaycastHit2D boxCast = Physics2D.BoxCast(boxCollider.bounds.center, colliderSize, 0, Vector2.down, 0.1f, platformLayer);
         return boxCast.collider != null;
+    }
+
+    private bool CanUncrouch()
+    {
+        Vector2 colliderSize = boxCollider.bounds.size;
+        RaycastHit2D boxCast = Physics2D.BoxCast(boxCollider.bounds.center, colliderSize, 0, Vector2.up, 0.5f, platformLayer);
+        return boxCast.collider == null;
     }
 }
