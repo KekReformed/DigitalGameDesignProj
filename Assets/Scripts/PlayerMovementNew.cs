@@ -11,6 +11,8 @@ public class PlayerMovementNew : MonoBehaviour
     [SerializeField] private float jumpVelocity;
     [SerializeField] private float jumpCutoffVelocity;
     [SerializeField] private LayerMask platformLayer;
+    [SerializeField] private LayerMask fallthruPlatformLayer;
+    [SerializeField] private LayerMask ledgeGrabbable;
     [SerializeField] private Vision vision;
     [SerializeField] private Vector2 visionOriginAdjustment;
     [SerializeField] private float ledgeGrabDistance;
@@ -102,7 +104,7 @@ public class PlayerMovementNew : MonoBehaviour
             transform.localScale = new Vector3(1, 1, 1);
         }
 
-        if (Input.GetButtonDown("Jump") && (OnGround() || OnLedge))
+        if (Input.GetButtonDown("Jump") && (OnGround() || OnLedge) && Input.GetAxisRaw("Vertical") >= 0)
         {
             isJumping = true;
             body.velocity = new Vector2(body.velocity.x, jumpVelocity);
@@ -137,8 +139,6 @@ public class PlayerMovementNew : MonoBehaviour
             OnLedge = true;
         }
 
-        Debug.Log($"{Ledges[1]}, {body.velocity.y < 0}, {!renderer.flipX}, {canGrabLedge}");
-
         if (OnLedge)
         {
             body.velocity = new Vector2(body.velocity.x, 0f);
@@ -159,13 +159,13 @@ public class PlayerMovementNew : MonoBehaviour
         output[1] = false;
 
         //Check on right
-        RaycastHit2D raycastHitTopRight = Physics2D.Raycast(upperOrigin, Vector2.right, ledgeGrabDistance, platformLayer);
-        RaycastHit2D raycastHitLowerRight = Physics2D.Raycast(lowerOrigin, Vector2.right, ledgeGrabDistance, platformLayer);
+        RaycastHit2D raycastHitTopRight = Physics2D.Raycast(upperOrigin, Vector2.right, ledgeGrabDistance, ledgeGrabbable);
+        RaycastHit2D raycastHitLowerRight = Physics2D.Raycast(lowerOrigin, Vector2.right, ledgeGrabDistance, ledgeGrabbable);
         if (raycastHitLowerRight.collider != null && raycastHitTopRight.collider == null) output[1] = true;
 
         //Check on Left
-        RaycastHit2D raycastHitTopLeft = Physics2D.Raycast(upperOrigin, Vector2.left, ledgeGrabDistance, platformLayer);
-        RaycastHit2D raycastHitLowerLeft = Physics2D.Raycast(lowerOrigin, Vector2.left, ledgeGrabDistance, platformLayer);
+        RaycastHit2D raycastHitTopLeft = Physics2D.Raycast(upperOrigin, Vector2.left, ledgeGrabDistance, ledgeGrabbable);
+        RaycastHit2D raycastHitLowerLeft = Physics2D.Raycast(lowerOrigin, Vector2.left, ledgeGrabDistance, ledgeGrabbable);
         if (raycastHitLowerLeft.collider != null && raycastHitTopLeft.collider == null) output[0] = true;
 
 
@@ -182,8 +182,9 @@ public class PlayerMovementNew : MonoBehaviour
 
     private bool OnGround()
     {
+        if (body.velocity.y < -0.5f) return false;
         Vector2 colliderSize = boxCollider.bounds.size;
-        RaycastHit2D boxCast = Physics2D.BoxCast(boxCollider.bounds.center, colliderSize, 0, Vector2.down, 0.1f, platformLayer);
+        RaycastHit2D boxCast = Physics2D.BoxCast(boxCollider.bounds.center, colliderSize , 0, Vector2.down, 0.1f, platformLayer | fallthruPlatformLayer);
         return boxCast.collider != null;
     }
 
