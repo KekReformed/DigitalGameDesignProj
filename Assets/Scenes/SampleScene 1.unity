@@ -4962,9 +4962,11 @@ MonoBehaviour:
     m_Bits: 64
   vision: {fileID: 401333553}
   visionOriginAdjustment: {x: 0, y: 0.25}
-  ledgeGrabDistance: 0.5
+  ledgeGrabDistance: 0.25
   ledgeGrabOffset: 0.2
   ledgeGrabCooldown: 0.5
+  extraJumps: 0
+  extraJumpsMax: 0
   ledgeGrabTolerance: 0.1
 --- !u!1 &1221184367
 GameObject:
