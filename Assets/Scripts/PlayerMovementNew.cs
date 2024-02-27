@@ -18,6 +18,8 @@ public class PlayerMovementNew : MonoBehaviour
     [SerializeField] private float ledgeGrabDistance;
     [SerializeField] private float ledgeGrabOffset;
     [SerializeField] private float ledgeGrabCooldown;
+    [SerializeField] private int extraJumps;
+    [SerializeField] private int extraJumpsMax;
     [SerializeField][Range(0f, 1f)] private float ledgeGrabTolerance;
 
     private bool isJumping;
@@ -52,6 +54,8 @@ public class PlayerMovementNew : MonoBehaviour
 
         if (Input.GetButton("Sprint")) moveSpeedMod = 2;
         else moveSpeedMod = 1;
+
+        if(OnGround()) extraJumps = extraJumpsMax;
 
         if (Input.GetAxisRaw("Horizontal") > 0 && body.velocity.x <= speedCap * moveSpeedMod)
         {
@@ -104,11 +108,12 @@ public class PlayerMovementNew : MonoBehaviour
             transform.localScale = new Vector3(1, 1, 1);
         }
 
-        if (Input.GetButtonDown("Jump") && (OnGround() || OnLedge) && Input.GetAxisRaw("Vertical") >= 0)
+        if (Input.GetButtonDown("Jump") && (extraJumps >= 1 || OnLedge || OnGround()) && Input.GetAxisRaw("Vertical") >= 0)
         {
             isJumping = true;
             body.velocity = new Vector2(body.velocity.x, jumpVelocity);
             LeaveLedge();
+            extraJumps -= 1;
         }
 
 
@@ -182,9 +187,10 @@ public class PlayerMovementNew : MonoBehaviour
 
     private bool OnGround()
     {
-        if (body.velocity.y < -0.5f) return false;
+        if (body.velocity.y < -0.1f) return false;
         Vector2 colliderSize = boxCollider.bounds.size;
-        RaycastHit2D boxCast = Physics2D.BoxCast(boxCollider.bounds.center, colliderSize , 0, Vector2.down, 0.1f, platformLayer | fallthruPlatformLayer);
+        Vector2 colliderBottom = new Vector2(boxCollider.bounds.center.x, boxCollider.bounds.center.y - (colliderSize.y/2));
+        RaycastHit2D boxCast = Physics2D.BoxCast(colliderBottom, colliderSize*0.1f , 0, Vector2.down, 0.1f, platformLayer | fallthruPlatformLayer);
         return boxCast.collider != null;
     }
 

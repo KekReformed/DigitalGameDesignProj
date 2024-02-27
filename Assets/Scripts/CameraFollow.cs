@@ -10,6 +10,16 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(player.transform.position.x,player.transform.position.y+1f,transform.position.z);
+        transform.position = new Vector3(Round(player.transform.position.x),Round(player.transform.position.y+1f),transform.position.z);
+    }
+
+
+    //I think this helps with pixel perfectness but im really not sure ngl
+    float Round(float numToRound)
+    {
+        numToRound *= 100;
+        int numToRoundInt = (int) numToRound;
+        numToRound = numToRoundInt;
+        return numToRound / 100;
     }
 }
