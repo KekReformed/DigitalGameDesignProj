@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="140c3b27-3270-4862-ad72-6b1998dd60c6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DigitalGameDesignProj/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigitalGameDesignProj/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UserSettings/Layouts/default-2021.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/Layouts/default-2021.dwlt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -97,6 +99,7 @@
       <updated>1709650285795</updated>
       <workItem from="1709650287682" duration="279000" />
       <workItem from="1709825722125" duration="206000" />
+      <workItem from="1710249584911" duration="60000" />
     </task>
     <servers />
   </component>

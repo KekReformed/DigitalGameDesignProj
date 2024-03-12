@@ -23,9 +23,12 @@ public class PlayerMovementNew : MonoBehaviour
     [SerializeField][Range(0f, 1f)] private float ledgeGrabTolerance;
 
     private bool isJumping;
-    private bool OnLedge;
+    private bool onLedge;
     private bool canGrabLedge;
+    private bool isCrouching;
+    private bool flipped;
     private int ledgeDir;
+    private int flipMod = 1;
     private float ledgeGrabbedForSeconds;
     private float moveSpeedMod = 1;
     private Rigidbody2D body;
@@ -56,6 +59,11 @@ public class PlayerMovementNew : MonoBehaviour
         else moveSpeedMod = 1;
 
         if(OnGround()) extraJumps = extraJumpsMax;
+
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            Flip();
+        }
 
         if (Input.GetAxisRaw("Horizontal") > 0 && body.velocity.x <= speedCap * moveSpeedMod)
         {
@@ -93,36 +101,32 @@ public class PlayerMovementNew : MonoBehaviour
             }
         }
 
-        if (Input.GetAxisRaw("Vertical") < 0)
-        {
-            if (OnGround())
-            {
-                if (transform.localScale.y >= 1f) transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
-                transform.localScale = new Vector3(1, 0.5f, 1);
-            }
-            LeaveLedge();
-        }
-        else if (CanUncrouch())
-        {
-            if (transform.localScale.y < 1f) transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
-            transform.localScale = new Vector3(1, 1, 1);
-        }
-
-        if (Input.GetButtonDown("Jump") && (extraJumps >= 1 || OnLedge || OnGround()) && Input.GetAxisRaw("Vertical") >= 0)
+        if (Input.GetButtonDown("Jump") && (extraJumps >= 1 || onLedge || OnGround()) && !isCrouching)
         {
             isJumping = true;
-            body.velocity = new Vector2(body.velocity.x, jumpVelocity);
+            body.velocity = new Vector2(body.velocity.x, jumpVelocity * flipMod);
             LeaveLedge();
             extraJumps -= 1;
+        }
+
+        if (Input.GetAxisRaw("Vertical") < 0)
+        {
+            Crouch();
+        }
+        else if (CanUncrouch() && isCrouching)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+            transform.localScale = new Vector3(1, 1, 1);
+            isCrouching = false;
         }
 
 
         //Jumping Cutoff so when you let go of the button your jump stops short
         if (Input.GetButtonUp("Jump"))
         {
-            if (isJumping && body.velocity.y > jumpCutoffVelocity)
+            if (isJumping && body.velocity.y * flipMod > jumpCutoffVelocity * flipMod)
             {
-                body.velocity = new Vector2(body.velocity.x, jumpCutoffVelocity);
+                body.velocity = new Vector2(body.velocity.x, jumpCutoffVelocity * flipMod);
             }
             isJumping = false;
         }
@@ -135,23 +139,24 @@ public class PlayerMovementNew : MonoBehaviour
         if (Ledges[0] && body.velocity.y < 0 && renderer.flipX && canGrabLedge)
         {
             ledgeDir = -1;
-            OnLedge = true;
+            onLedge = true;
         }
         //Right Ledge
         else if (Ledges[1] && body.velocity.y < 0 && !renderer.flipX && canGrabLedge)
         {
             ledgeDir = 1;
-            OnLedge = true;
+            onLedge = true;
         }
 
-        if (OnLedge)
+        if (onLedge)
         {
             body.velocity = new Vector2(body.velocity.x, 0f);
             body.gravityScale = 0f;
-            OnLedge = true;
+            onLedge = true;
         }
 
-        else body.gravityScale = 1f;
+        else if (flipped) body.gravityScale = -1f;
+        else body.gravityScale = 1;
     }
 
     private bool[] LedgeCheck()
@@ -180,18 +185,51 @@ public class PlayerMovementNew : MonoBehaviour
     //USE THIS INSTEAD OF OnLedge = false OR IT WILL DO THE BUG
     private void LeaveLedge()
     {
-        if (!OnLedge) return;
+        if (!onLedge) return;
         if (ledgeGrabbedForSeconds > ledgeGrabCooldown) ledgeGrabbedForSeconds = 0;
-        OnLedge = false;
+        onLedge = false;
     }
 
     private bool OnGround()
     {
-        if (body.velocity.y < -0.1f) return false;
         Vector2 colliderSize = boxCollider.bounds.size;
         Vector2 colliderBottom = new Vector2(boxCollider.bounds.center.x, boxCollider.bounds.center.y - (colliderSize.y/2));
-        RaycastHit2D boxCast = Physics2D.BoxCast(colliderBottom, colliderSize*0.1f , 0, Vector2.down, 0.1f, platformLayer | fallthruPlatformLayer);
+        Vector2 colliderTop = new Vector2(boxCollider.bounds.center.x, boxCollider.bounds.center.y + (colliderSize.y / 2));
+
+        RaycastHit2D boxCast;
+        if (flipped) boxCast = Physics2D.BoxCast(colliderTop, colliderSize * 0.1f, 0, Vector2.up, 0.1f, platformLayer | fallthruPlatformLayer);
+        else boxCast = Physics2D.BoxCast(colliderBottom, colliderSize * 0.1f, 0, Vector2.down, 0.1f, platformLayer | fallthruPlatformLayer);
+
+        Debug.DrawRay(colliderTop, Vector2.up, Color.green);
         return boxCast.collider != null;
+    }
+
+    private void Crouch()
+    {
+        if (OnGround() && !isCrouching)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
+            transform.localScale = new Vector3(1, 0.5f, 1);
+            isCrouching = true;
+        }
+    }
+
+    private void Flip()
+    {
+        if (flipped)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y + 2.5f, transform.position.z);
+            transform.localScale = new Vector3(1, 1, 1);
+            flipped = false;
+            flipMod = 1;
+        }
+        else
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y - 2.5f, transform.position.z);
+            transform.localScale = new Vector3(1, -1, 1);
+            flipped = true;
+            flipMod = -1;
+        }
     }
 
     private bool CanUncrouch()
