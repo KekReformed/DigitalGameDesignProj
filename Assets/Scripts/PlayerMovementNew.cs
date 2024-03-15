@@ -4,23 +4,52 @@ using UnityEngine;
 
 public class PlayerMovementNew : MonoBehaviour
 {
+
+    enum Upgrades
+    {
+        flip
+    }
+
+    [Header("Speed")]
+    [Space(10)]
     public float acceleration;
     public float decceleration;
 
     [SerializeField] private float speedCap;
+
+    [Header("Jumping")]
+    [Space(10)]
     [SerializeField] private float jumpVelocity;
     [SerializeField] private float jumpCutoffVelocity;
-    [SerializeField] private LayerMask platformLayer;
-    [SerializeField] private LayerMask fallthruPlatformLayer;
+    [SerializeField] private int extraJumps;
+    [SerializeField] private int extraJumpsMax;
+
+
+
+    [Header("Ledge Grabbing")]
+    [Space(10)]
     [SerializeField] private LayerMask ledgeGrabbable;
-    [SerializeField] private Vision vision;
+
     [SerializeField] private Vector2 visionOriginAdjustment;
     [SerializeField] private float ledgeGrabDistance;
     [SerializeField] private float ledgeGrabOffset;
     [SerializeField] private float ledgeGrabCooldown;
-    [SerializeField] private int extraJumps;
-    [SerializeField] private int extraJumpsMax;
     [SerializeField][Range(0f, 1f)] private float ledgeGrabTolerance;
+
+    [Header("Flipping")]
+    [Space(10)]
+    [SerializeField] private float flipDistance;
+    [SerializeField] private LayerMask flipLayer;
+
+    [Header("Vision")]
+    [Space(10)]
+    [SerializeField] private Vision vision;
+    [SerializeField] private GameObject visionCircle;
+
+    [Header("Platform Layers")]
+    [Space(10)]
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask fallthruPlatformLayer;
 
     private bool isJumping;
     private bool onLedge;
@@ -31,6 +60,7 @@ public class PlayerMovementNew : MonoBehaviour
     private int flipMod = 1;
     private float ledgeGrabbedForSeconds;
     private float moveSpeedMod = 1;
+    private Inventory inventory;
     private Rigidbody2D body;
     private BoxCollider2D boxCollider;
     private SpriteRenderer renderer; //Ignore this error unity is really dumb sometimes
@@ -40,12 +70,13 @@ public class PlayerMovementNew : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
         renderer = GetComponent<SpriteRenderer>();
+        inventory = GetComponent<Inventory>();
     }
 
     void Update()
     {
         //Vision Cone Movement
-        vision.SetOrigin(transform.position, visionOriginAdjustment);
+        vision.SetOrigin(transform.position, visionOriginAdjustment * flipMod);
         vision.SetAim(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
         if (ledgeGrabbedForSeconds < ledgeGrabCooldown)
@@ -58,9 +89,9 @@ public class PlayerMovementNew : MonoBehaviour
         if (Input.GetButton("Sprint")) moveSpeedMod = 2;
         else moveSpeedMod = 1;
 
-        if(OnGround()) extraJumps = extraJumpsMax;
+        if (OnLayer(groundLayer | fallthruPlatformLayer)) extraJumps = extraJumpsMax;
 
-        if(Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && OnLayer(flipLayer) && inventory.upgrades[(int) Upgrades.flip].upgradeEnabled)
         {
             Flip();
         }
@@ -71,6 +102,7 @@ public class PlayerMovementNew : MonoBehaviour
             if (ledgeDir == -1) LeaveLedge();
             renderer.flipX = false;
         }
+
         else if (Input.GetAxisRaw("Horizontal") < 0 && body.velocity.x >= -speedCap * moveSpeedMod)
         {
             body.velocity = new Vector2(body.velocity.x - acceleration * Time.deltaTime * moveSpeedMod, body.velocity.y);
@@ -101,7 +133,7 @@ public class PlayerMovementNew : MonoBehaviour
             }
         }
 
-        if (Input.GetButtonDown("Jump") && (extraJumps >= 1 || onLedge || OnGround()) && !isCrouching)
+        if (Input.GetButtonDown("Jump") && (extraJumps >= 1 || onLedge || OnLayer(groundLayer | fallthruPlatformLayer)) && !isCrouching)
         {
             isJumping = true;
             body.velocity = new Vector2(body.velocity.x, jumpVelocity * flipMod);
@@ -190,23 +222,23 @@ public class PlayerMovementNew : MonoBehaviour
         onLedge = false;
     }
 
-    private bool OnGround()
+    //Check if were standing on a layer using boxcasts
+    private bool OnLayer(LayerMask layer)
     {
         Vector2 colliderSize = boxCollider.bounds.size;
-        Vector2 colliderBottom = new Vector2(boxCollider.bounds.center.x, boxCollider.bounds.center.y - (colliderSize.y/2));
+        Vector2 colliderBottom = new Vector2(boxCollider.bounds.center.x, boxCollider.bounds.center.y - (colliderSize.y / 2));
         Vector2 colliderTop = new Vector2(boxCollider.bounds.center.x, boxCollider.bounds.center.y + (colliderSize.y / 2));
 
         RaycastHit2D boxCast;
-        if (flipped) boxCast = Physics2D.BoxCast(colliderTop, colliderSize * 0.1f, 0, Vector2.up, 0.1f, platformLayer | fallthruPlatformLayer);
-        else boxCast = Physics2D.BoxCast(colliderBottom, colliderSize * 0.1f, 0, Vector2.down, 0.1f, platformLayer | fallthruPlatformLayer);
+        if (flipped) boxCast = Physics2D.BoxCast(colliderTop, colliderSize * 0.1f, 0, Vector2.up, 0.1f, layer);
+        else boxCast = Physics2D.BoxCast(colliderBottom, colliderSize * 0.1f, 0, Vector2.down, 0.1f, layer);
 
-        Debug.DrawRay(colliderTop, Vector2.up, Color.green);
         return boxCast.collider != null;
     }
 
     private void Crouch()
     {
-        if (OnGround() && !isCrouching)
+        if (OnLayer(groundLayer | fallthruPlatformLayer) && !isCrouching)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
             transform.localScale = new Vector3(1, 0.5f, 1);
@@ -218,24 +250,27 @@ public class PlayerMovementNew : MonoBehaviour
     {
         if (flipped)
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y + 2.5f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, transform.position.y + flipDistance, transform.position.z);
             transform.localScale = new Vector3(1, 1, 1);
             flipped = false;
             flipMod = 1;
         }
         else
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y - 2.5f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, transform.position.y - flipDistance, transform.position.z);
             transform.localScale = new Vector3(1, -1, 1);
             flipped = true;
             flipMod = -1;
         }
+
+        //Flip vision circle as well
+        visionCircle.transform.localScale = new Vector3(visionCircle.transform.localScale.x, visionCircle.transform.localScale.y * -1);
     }
 
     private bool CanUncrouch()
     {
         Vector2 colliderSize = boxCollider.bounds.size;
-        RaycastHit2D boxCast = Physics2D.BoxCast(boxCollider.bounds.center, colliderSize, 0, Vector2.up, 0.5f, platformLayer);
+        RaycastHit2D boxCast = Physics2D.BoxCast(boxCollider.bounds.center, colliderSize, 0, Vector2.up, 0.5f, groundLayer);
         return boxCast.collider == null;
     }
 }
