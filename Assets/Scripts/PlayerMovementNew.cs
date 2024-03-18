@@ -21,6 +21,7 @@ public class PlayerMovementNew : MonoBehaviour
     [Space(10)]
     [SerializeField] private float jumpVelocity;
     [SerializeField] private float jumpCutoffVelocity;
+    [SerializeField] private float fallSpeedCap;
     [SerializeField] private int extraJumps;
     [SerializeField] private int extraJumpsMax;
 
@@ -50,8 +51,9 @@ public class PlayerMovementNew : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask fallthruPlatformLayer;
 
-    private bool isJumping;
     private Animator animator;
+    private bool isJumping;
+    private bool allowSprint;
     private bool onLedge;
     private bool canGrabLedge;
     private bool isCrouching;
@@ -91,12 +93,10 @@ public class PlayerMovementNew : MonoBehaviour
 
         animator.SetFloat("Speed",Mathf.Abs(body.velocity.x)); 
 
-        if (Input.GetButton("Sprint")) moveSpeedMod = 2;
+        if (Input.GetButton("Sprint") && allowSprint) moveSpeedMod = 2;
         else moveSpeedMod = 1;
 
         if (OnLayer(groundLayer | fallthruPlatformLayer)) extraJumps = extraJumpsMax;
-
-
 
         if (Input.GetAxisRaw("Horizontal") > 0 && body.velocity.x <= speedCap * moveSpeedMod)
         {
@@ -149,7 +149,7 @@ public class PlayerMovementNew : MonoBehaviour
         }
         else if (CanUncrouch() && isCrouching)
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, transform.position.y + (0.5f * flipMod), transform.position.z);
             transform.localScale = new Vector3(1, 1*flipMod, 1);
             isCrouching = false;
         }
@@ -198,6 +198,8 @@ public class PlayerMovementNew : MonoBehaviour
         {
             Flip();
         }
+
+        body.velocity = new Vector2 (body.velocity.x, Mathf.Clamp(body.velocity.y, -fallSpeedCap, 100));
     }
 
     private bool[] LedgeCheck()
