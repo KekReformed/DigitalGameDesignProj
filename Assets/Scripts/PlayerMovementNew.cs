@@ -150,7 +150,7 @@ public class PlayerMovementNew : MonoBehaviour
         else if (CanUncrouch() && isCrouching)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
-            transform.localScale = new Vector3(1, 1, 1);
+            transform.localScale = new Vector3(1, 1*flipMod, 1);
             isCrouching = false;
         }
 
@@ -250,7 +250,7 @@ public class PlayerMovementNew : MonoBehaviour
         if (OnLayer(groundLayer | fallthruPlatformLayer) && !isCrouching)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
-            transform.localScale = new Vector3(1, 0.5f, 1);
+            transform.localScale = new Vector3(1, 0.5f*flipMod, 1);
             isCrouching = true;
         }
     }
@@ -279,7 +279,7 @@ public class PlayerMovementNew : MonoBehaviour
     private bool CanUncrouch()
     {
         Vector2 colliderSize = boxCollider.bounds.size;
-        RaycastHit2D boxCast = Physics2D.BoxCast(boxCollider.bounds.center, colliderSize, 0, Vector2.up, 0.5f, groundLayer);
+        RaycastHit2D boxCast = Physics2D.BoxCast(boxCollider.bounds.center, colliderSize, 0, Vector2.up * flipMod, 0.5f, groundLayer);
         return boxCast.collider == null;
     }
 }
