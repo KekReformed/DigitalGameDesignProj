@@ -187,10 +187,13 @@ public class PlayerMovementNew : MonoBehaviour
             body.velocity = new Vector2(body.velocity.x, 0f);
             body.gravityScale = 0f;
             onLedge = true;
-        }
-
+        }        
+        
         else if (flipped) body.gravityScale = -1f;
-        else body.gravityScale = 1;       
+        else body.gravityScale = 1;    
+
+        if (Camera.main.ScreenToWorldPoint(Input.mousePosition).x - body.position.x > 0) renderer.flipX = false;
+        else renderer.flipX = true;  
         
 
         //Upgrades
@@ -257,7 +260,7 @@ public class PlayerMovementNew : MonoBehaviour
         }
     }
 
-    private void Flip()
+    public void Flip()
     {
         if (flipped)
         {

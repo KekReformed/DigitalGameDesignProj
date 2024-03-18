@@ -11,5 +11,6 @@ public class CollectableUpgrade : MonoBehaviour
     {
         if (!player.gameObject.CompareTag("Player")) return;
         player.AddComponent<Upgrade>().createUpgrade(upgradeName, upgradeIndex);
+        player.GetComponent<PlayerMovementNew>().Flip();
     }
 }
