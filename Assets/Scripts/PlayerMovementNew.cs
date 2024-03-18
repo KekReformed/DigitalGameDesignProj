@@ -29,8 +29,6 @@ public class PlayerMovementNew : MonoBehaviour
     [Header("Ledge Grabbing")]
     [Space(10)]
     [SerializeField] private LayerMask ledgeGrabbable;
-
-    [SerializeField] private Vector2 visionOriginAdjustment;
     [SerializeField] private float ledgeGrabDistance;
     [SerializeField] private float ledgeGrabOffset;
     [SerializeField] private float ledgeGrabCooldown;
@@ -43,7 +41,8 @@ public class PlayerMovementNew : MonoBehaviour
 
     [Header("Vision")]
     [Space(10)]
-    [SerializeField] private Vision vision;
+    [SerializeField] private Vision vision;    
+    [SerializeField] private Vector2 visionOriginAdjustment;
     [SerializeField] private GameObject visionCircle;
 
     [Header("Platform Layers")]
@@ -52,6 +51,7 @@ public class PlayerMovementNew : MonoBehaviour
     [SerializeField] private LayerMask fallthruPlatformLayer;
 
     private bool isJumping;
+    private Animator animator;
     private bool onLedge;
     private bool canGrabLedge;
     private bool isCrouching;
@@ -71,6 +71,7 @@ public class PlayerMovementNew : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         renderer = GetComponent<SpriteRenderer>();
         inventory = GetComponent<Inventory>();
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -79,6 +80,8 @@ public class PlayerMovementNew : MonoBehaviour
         vision.SetOrigin(transform.position, visionOriginAdjustment * flipMod);
         vision.SetAim(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
+
+        //Basic Movement
         if (ledgeGrabbedForSeconds < ledgeGrabCooldown)
         {
             ledgeGrabbedForSeconds += Time.deltaTime;
@@ -86,15 +89,14 @@ public class PlayerMovementNew : MonoBehaviour
         }
         else canGrabLedge = true;
 
+        animator.SetFloat("Speed",Mathf.Abs(body.velocity.x)); 
+
         if (Input.GetButton("Sprint")) moveSpeedMod = 2;
         else moveSpeedMod = 1;
 
         if (OnLayer(groundLayer | fallthruPlatformLayer)) extraJumps = extraJumpsMax;
 
-        if (Input.GetKeyDown(KeyCode.R) && OnLayer(flipLayer) && inventory.upgrades[(int) Upgrades.flip].upgradeEnabled)
-        {
-            Flip();
-        }
+
 
         if (Input.GetAxisRaw("Horizontal") > 0 && body.velocity.x <= speedCap * moveSpeedMod)
         {
@@ -188,7 +190,14 @@ public class PlayerMovementNew : MonoBehaviour
         }
 
         else if (flipped) body.gravityScale = -1f;
-        else body.gravityScale = 1;
+        else body.gravityScale = 1;       
+        
+
+        //Upgrades
+        if (Input.GetKeyDown(KeyCode.R) && OnLayer(flipLayer) && inventory.upgrades[(int) Upgrades.flip].upgradeEnabled)
+        {
+            Flip();
+        }
     }
 
     private bool[] LedgeCheck()
