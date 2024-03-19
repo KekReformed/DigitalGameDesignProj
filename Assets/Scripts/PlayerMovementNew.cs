@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovementNew : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class PlayerMovementNew : MonoBehaviour
     [Space(10)]
     public float acceleration;
     public float decceleration;
-
+    [SerializeField] private bool allowSprint;
     [SerializeField] private float speedCap;
 
     [Header("Jumping")]
@@ -53,7 +54,7 @@ public class PlayerMovementNew : MonoBehaviour
 
     private Animator animator;
     private bool isJumping;
-    private bool allowSprint;
+
     private bool onLedge;
     private bool canGrabLedge;
     private bool isCrouching;
@@ -170,7 +171,7 @@ public class PlayerMovementNew : MonoBehaviour
 
 
         //Left Ledge
-        if (Ledges[0] && body.velocity.y < 0 && renderer.flipX && canGrabLedge)
+        if (Ledges[0] && (body.velocity.y < 0 && flipMod == 1 || body.velocity.y > 0 && flipMod == 0) && renderer.flipX && canGrabLedge)
         {
             ledgeDir = -1;
             onLedge = true;
@@ -203,12 +204,14 @@ public class PlayerMovementNew : MonoBehaviour
         }
 
         body.velocity = new Vector2 (body.velocity.x, Mathf.Clamp(body.velocity.y, -fallSpeedCap, 100));
+
+        if (Input.GetKeyDown(KeyCode.U) && Input.GetKeyDown(KeyCode.I)) SceneManager.LoadScene("menu");
     }
 
     private bool[] LedgeCheck()
     {
-        Vector2 upperOrigin = new Vector2(transform.position.x, transform.position.y + ledgeGrabOffset + ledgeGrabTolerance);
-        Vector2 lowerOrigin = new Vector2(transform.position.x, transform.position.y + ledgeGrabOffset);
+        Vector2 upperOrigin = new Vector2(transform.position.x, transform.position.y + (ledgeGrabOffset + ledgeGrabTolerance) * flipMod);
+        Vector2 lowerOrigin = new Vector2(transform.position.x, transform.position.y + (ledgeGrabOffset) * flipMod);
 
         bool[] output = new bool[2];
         output[0] = false;
