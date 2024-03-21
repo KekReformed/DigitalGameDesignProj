@@ -24923,7 +24923,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 816644590}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.39, y: 0.15, z: 0}
+  m_LocalPosition: {x: 120.75, y: -16.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -24947,9 +24947,9 @@ MonoBehaviour:
   decceleration: 20
   allowSprint: 0
   speedCap: 5
-  jumpVelocity: 7
-  jumpCutoffVelocity: 0.5
-  fallSpeedCap: 10
+  jumpVelocity: 10.5
+  jumpCutoffVelocity: 2
+  fallSpeedCap: 12
   extraJumps: 0
   extraJumpsMax: 0
   ledgeGrabbable:

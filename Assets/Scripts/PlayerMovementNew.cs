@@ -190,8 +190,8 @@ public class PlayerMovementNew : MonoBehaviour
             onLedge = true;
         }        
         
-        else if (flipped) body.gravityScale = -1f;
-        else body.gravityScale = 1;    
+        else if (flipped) body.gravityScale = -2.5f;
+        else body.gravityScale = 2.5f;    
 
         if (Camera.main.ScreenToWorldPoint(Input.mousePosition).x - body.position.x > 0) renderer.flipX = false;
         else renderer.flipX = true;  
