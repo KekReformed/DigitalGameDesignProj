@@ -9,11 +9,6 @@ public class AveragePixels : MonoBehaviour
     public Tile testTile;
     BoundsInt bounds;
 
-    void Start()
-    {
-
-    }
-
     [ContextMenu("Set tiles to map tiles (will break things)")]
     public void SetMapTiles()
     {
@@ -25,16 +20,18 @@ public class AveragePixels : MonoBehaviour
             {
                 for (int z = bounds.min.z; z < bounds.max.z; z++)
                 {
-                    Tile tile = tilemap.GetTile<Tile>(new Vector3Int(x, y, z));
+                    Vector3Int tilePos = new Vector3Int(x, y, z);
+                    Tile tile = tilemap.GetTile<Tile>(tilePos);
+
                     if (tile == null) continue;
                     if (tile.sprite == null) continue;
+                    
                     string assetPath = AssetDatabase.GetAssetPath(tile.sprite.texture);
-                    Object[] data = AssetDatabase.LoadAllAssetsAtPath(assetPath);
 
                     Sprite sprite = Sprite.Create(AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath.Split(".")[0] + "_map" + "." + assetPath.Split(".")[1]), tile.sprite.rect, new Vector2(0.5f, 0.5f), 32);
                     Tile tempTile = testTile;
                     tempTile.sprite = sprite;
-                    tilemap.SetTile(new Vector3Int(x, y, z), tempTile);
+                    tilemap.SetTile(tilePos, tempTile);
                 }
             }
         }
