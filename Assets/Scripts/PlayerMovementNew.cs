@@ -43,7 +43,7 @@ public class PlayerMovementNew : MonoBehaviour
 
     [Header("Vision")]
     [Space(10)]
-    [SerializeField] private Vision vision;    
+    [SerializeField] private Vision vision;
     [SerializeField] private Vector2 visionOriginAdjustment;
     [SerializeField] private GameObject visionCircle;
 
@@ -52,6 +52,7 @@ public class PlayerMovementNew : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask fallthruPlatformLayer;
 
+    [HideInInspector] public bool LockMovement = false;
     private Animator animator;
     private bool isJumping;
 
@@ -64,9 +65,9 @@ public class PlayerMovementNew : MonoBehaviour
     private float ledgeGrabbedForSeconds;
     private float moveSpeedMod = 1;
     private Inventory inventory;
-    private Rigidbody2D body;
+    public Rigidbody2D body;
     private BoxCollider2D boxCollider;
-    private SpriteRenderer renderer; //Ignore this error unity is really dumb sometimes
+    public SpriteRenderer renderer; //Ignore this error unity is really dumb sometimes
 
     void Start()
     {
@@ -81,6 +82,15 @@ public class PlayerMovementNew : MonoBehaviour
     {
         //Vision Cone Movement
         vision.SetOrigin(transform.position, visionOriginAdjustment * flipMod);
+
+        animator.SetFloat("Speed", Mathf.Abs(body.velocity.x));
+
+        if (LockMovement)
+        {
+            animator.SetFloat("Speed", Mathf.Abs(body.velocity.x * 10));
+            return;
+        }
+        else animator.SetFloat("Speed", Mathf.Abs(body.velocity.x));
         vision.SetAim(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
 
@@ -92,7 +102,7 @@ public class PlayerMovementNew : MonoBehaviour
         }
         else canGrabLedge = true;
 
-        animator.SetFloat("Speed",Mathf.Abs(body.velocity.x)); 
+
 
         if (Input.GetButton("Sprint") && allowSprint) moveSpeedMod = 2;
         else moveSpeedMod = 1;
@@ -151,7 +161,7 @@ public class PlayerMovementNew : MonoBehaviour
         else if (CanUncrouch() && isCrouching)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y + (0.5f * flipMod), transform.position.z);
-            transform.localScale = new Vector3(1, 1*flipMod, 1);
+            transform.localScale = new Vector3(1, 1 * flipMod, 1);
             isCrouching = false;
         }
 
@@ -188,22 +198,22 @@ public class PlayerMovementNew : MonoBehaviour
             body.velocity = new Vector2(body.velocity.x, 0f);
             body.gravityScale = 0f;
             onLedge = true;
-        }        
-        
+        }
+
         else if (flipped) body.gravityScale = -2.5f;
-        else body.gravityScale = 2.5f;    
+        else body.gravityScale = 2.5f;
 
         if (Camera.main.ScreenToWorldPoint(Input.mousePosition).x - body.position.x > 0) renderer.flipX = false;
-        else renderer.flipX = true;  
-        
+        else renderer.flipX = true;
+
 
         //Upgrades
-        if (Input.GetKeyDown(KeyCode.R) && OnLayer(flipLayer) && inventory.upgrades[(int) Upgrades.flip].upgradeEnabled)
+        if (Input.GetKeyDown(KeyCode.R) && OnLayer(flipLayer) && inventory.upgrades[(int)Upgrades.flip].upgradeEnabled)
         {
             Flip();
         }
 
-        body.velocity = new Vector2 (body.velocity.x, Mathf.Clamp(body.velocity.y, -fallSpeedCap, 100));
+        body.velocity = new Vector2(body.velocity.x, Mathf.Clamp(body.velocity.y, -fallSpeedCap, 100));
 
         if (Input.GetKeyDown(KeyCode.U) && Input.GetKeyDown(KeyCode.I)) SceneManager.LoadScene("menu");
     }
@@ -258,9 +268,16 @@ public class PlayerMovementNew : MonoBehaviour
         if (OnLayer(groundLayer | fallthruPlatformLayer) && !isCrouching)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
-            transform.localScale = new Vector3(1, 0.5f*flipMod, 1);
+            transform.localScale = new Vector3(1, 0.5f * flipMod, 1);
             isCrouching = true;
         }
+    }
+
+    //Forces movement, rn only used to get character in right position for dialogue
+    public void MoveTo(Vector2 moveToPoint)
+    {
+        if (Vector2.Distance(moveToPoint, body.position) < 0.5) body.velocity = new Vector2(0, body.velocity.y);
+        else body.velocity = new Vector2(moveToPoint.x - transform.position.x, body.velocity.y);
     }
 
     public void Flip()
